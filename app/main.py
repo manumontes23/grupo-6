@@ -26,7 +26,6 @@ class User(db.Model):
     def __repr__(self):
         return "usuario: " + str(self.username) + " Correo: " + str(self.email)
 
-
 class Clientes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(80), unique=True, nullable=False)

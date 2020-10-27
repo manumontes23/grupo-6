@@ -24,7 +24,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return "usuario: " + str(self.username) + " Correo: " + str(self.email)
 
     """ Ejemplos """
 
@@ -51,7 +51,9 @@ def eliminar(id):
 
 @app.route('/ejemplo', methods=['GET'])
 def obtenerTodos():
-    return jsonify(User.query.all())
+    usuarios = User.query.all()
+    return jsonify({"message":"Resultados Extraidos con exito","Usuarios":str(usuarios)
+    })
 
 
 """ RUTAS SANTIAGO JIMENEZ RAIGOSA """

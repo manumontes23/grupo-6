@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -26,6 +26,30 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+
+class Clientes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(80), unique=True, nullable=False)
+    apellidos = db.Column(db.String(80), unique=True, nullable=False)
+    telefono = db.Column(db.String(80), unique=True, nullable=False)
+    celular = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+
+    def __repr__(self):
+        return 'nombre: ' + str(nombre) + ' apellidos: ' + str(apellidos) + ' telefono: ' + str(telefono) + ' telefono: ' + str(celular)+' celular: ' + str(nombre)+' email: ' + str(email)
+
+
+class Riesgos(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(80), unique=True, nullable=False)
+    fecha = db.Column(db.Date, unique=True, nullable=False)
+    valor = db.Column(db.dDouble(80), unique=True, nullable=False)
+    cliente_id = db.Column(db.Integer, db.ForeignKey('Clientes.id'),
+                           nullable=False)
+
+    def __repr__(self):
+        return ' nombre: ' + str(nombre) + ' fecha: ' + str(fecha) + ' valor: ' + str(valor) + ' cliente_id: ' + str(cliente_id)
+
     """ Ejemplos """
 
 
@@ -44,7 +68,7 @@ def insertar():
 
 @app.route('/ejemplo/<string:id>', methods=['DELETE'])
 def eliminar(id):
-    db.session.delete(me)
+    db.session.delete(id)
     db.session.commit()
     return jsonify({'message': 'Elimado'})
 
@@ -59,10 +83,28 @@ def obtenerTodos():
 """ GET """
 """ Retorna los clientes del VaR """
 
-""" Retorna un cliente especifico que tenga el valor en riesgo """
+""" Retorna un cliente especifico que tenga el valor en riesgo (cifras negativas)"""
 
 """ POST """
 """ Crea un nuevo cliente para el VaR """
+
+
+@app.route('/var/crearCliente', methods=['POST'])
+def crearClienteVar():
+    nombre = request.json['nombre']
+    apellidos = request.json['apellidos']
+    telefono = request.json['telefono']
+    celular = request.json['celular']
+    email = request.json['email']
+    me = User(nombre = nombre, apellidos = apellidos,
+              telefono = telefono, celular = celular, email = email)
+    db.session.add(me)
+    db.session.commit()
+    if(me.id):
+        return jsonify({'message': 'Registrado'})
+    else:
+        return jsonify({'message': 'Error'})
+
 
 """ PUT """
 """ Actualiza un cliente para el VaR """

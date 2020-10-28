@@ -171,6 +171,8 @@ def eliminarClienteEspecifico(id_Cliente):
     return jsonify({'message': 'Cliente eliminado'})
 
 
+
+
 #########################################################################################################
 """ RUTAS SANTIAGO JIMENEZ RAIGOSA """
 #########################################################################################################
@@ -180,45 +182,50 @@ def eliminarClienteEspecifico(id_Cliente):
 
 @ app.route('/var/clientes/', methods=['GET'])
 def getClientesVar():
-    #Encontramos los ids de los clientes que tienen como riesgo el var
-    Clientes_var = Riesgos.query.filter_by(Riesgos.nombre == "VAR").all()
-    return jsonify(Clientes_var)
-
+    #Encontramos los ids de los clientes que tienen como riesgo el var y los busca en Clientes
+    Clientes_var = Clientes.query.filter(Clientes.id == Riesgos.cliente_id, Riesgos.nombre == "VAR").all()
+    #Retorna los clientes asi bien chidos
+    if(Clientes_var):
+        return jsonify({"message": "Resultados Extraidos con exito", "Clientes": str(Clientes_var)})
+    else:
+        return jsonify({'message': 'No existen clientes'})
+    
 
 """ Retorna un cliente especifico que tenga el valor en riesgo (cifras negativas)"""
 
-@ app.route('/var/clienteID/<string:id>', methods=['GET'])
+@ app.route('/var/clienteID/<id_buscar>', methods=['GET'])
 def getClientesVarID(id_buscar):
     #Encontramos el id que cumpla con las condiciones
-    id_cliente = Riesgos.query.filter(Riesgos.id == id_buscar ,Riesgos.nombre=="VAR", Riesgos.valor <= 0).first()
+    datos_cliente = Clientes.query.filter(Clientes.id == id_buscar,Riesgos.cliente_id== id_buscar, Riesgos.nombre=="VAR", Riesgos.valor <= 0).first()
     #Buscamos los datos de ese id
-    datos_cliente = Clientes.query.filter(id_cliente.id)
     #entregamos los datos
-    return jsonify(datos_cliente)
+    if(datos_cliente):
+        return jsonify({"message": "Resultados Extraidos con exito", "Cliente con valor en riesgo": str(datos_cliente)})
+    else:
+        return jsonify({'message': 'No existe ese cliente o con las especificaciones de tener el valor en riesgo'})
     
 
 """ POST """
 """ Crea un nuevo cliente para el VaR """
 
-
 @ app.route('/var/crearCliente', methods=['POST'])
 def crearClienteVar():
     # Datos cliente
     id_cliente = request.json['id']
-    nombre = request.json['nombre']
+    nombre_cliente = request.json['nombre']
     apellidos = request.json['apellidos']
     telefono = request.json['telefono']
     celular = request.json['celular']
     email = request.json['email']
-    # Datos del varo
-    nombre = "VAR"
+    # Datos del var
+    nombre_riesgo = "VAR"
     fecha = datetime.now()
     valor = request.json['valor']
     # Insertando los datos
-    cliente = Clientes(id=id_cliente, nombre=nombre, apellidos=apellidos,
+    cliente = Clientes(id=id_cliente, nombre=nombre_cliente, apellidos=apellidos,
                        telefono=telefono, celular=celular, email=email)
 
-    riesgo = Riesgos(nombre=nombre, fecha=fecha,
+    riesgo = Riesgos(nombre=nombre_riesgo, fecha=fecha,
                      valor=valor, cliente_id=id_cliente)
     #Agregandolos
     db.session.add(cliente)
@@ -241,16 +248,19 @@ def crearClienteVar():
 """ Borra un cliente especifico para el VaR """
 
 
-@ app.route('/var/eliminarCliente/<string:id>', methods=['DELETE'])
+@ app.route('/var/eliminarCliente/<string:id_cliente>', methods=['DELETE'])
 def eliminarClienteVar(id_cliente):
     #Obtenemos cliente por id y que sea var
-    cliente = Riesgos.query.filter_by(Riesgos.cliente_id == id_cliente, Riesgos.nombre == "VAR")
+    cliente = Riesgos.query.filter(Riesgos.cliente_id == id_cliente, Riesgos.nombre == "VAR").first()
     #Eliminamos
-    db.session.delete(cliente)
-    #hacemos commit
-    db.session.commit()
-    #
-    return jsonify({'message': 'Elimado'})
+    if(cliente):
+        db.session.delete(cliente)
+        #hacemos commit
+        db.session.commit()
+        return jsonify({'message': 'Eliminado'})
+    else:
+        return jsonify({'message': 'Ese id no corrospendo a ningun cliente con riesgo var'})
+
 
 
 #########################################################################################################

@@ -32,11 +32,11 @@ class User(db.Model):
 
 class Clientes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(45), unique=True, nullable=False)
-    apellidos = db.Column(db.String(45), unique=True, nullable=False)
-    telefono = db.Column(db.String(45), unique=True, nullable=False)
-    celular = db.Column(db.String(45), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    nombre = db.Column(db.String(45), nullable=False)
+    apellidos = db.Column(db.String(45), nullable=False)
+    telefono = db.Column(db.String(45), nullable=False)
+    celular = db.Column(db.String(45), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
 
     def __repr__(self):
         return 'id: ' + str(self.id) + 'nombre: ' + str(self.nombre) + ' apellidos: ' + str(self.apellidos) + ' telefono: ' + str(self.telefono) + ' celular: ' + str(self.celular)+' email: ' + str(self.email)
@@ -44,8 +44,8 @@ class Clientes(db.Model):
 
 class Riesgos(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nombre = db.Column(db.String(45), unique=True, nullable=False)
-    fecha = db.Column(db.String(45), unique=True, nullable=False)
+    nombre = db.Column(db.String(45), nullable=False)
+    fecha = db.Column(db.String(45), nullable=False)
     valor = db.Column(db.Float(80), unique=True, nullable=False)
     cliente_id = db.Column(db.Integer, db.ForeignKey(
         'clientes.id'), nullable=False)
@@ -119,7 +119,7 @@ def crearClienteRM():
     db.session.add(riesgo)
     db.session.commit()
     if(cliente.id):
-        return jsonify({'message': 'Cliente registrado'})
+        return jsonify({'message': 'Cliente registrado', "Cliente": str(cliente), "riesgo": str(riesgo)})
     else:
         return jsonify({'message': 'Error en el registro'})
 

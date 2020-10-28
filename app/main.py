@@ -180,7 +180,7 @@ def eliminarClienteEspecifico(id_Cliente):
 """ GET """
 """ Retorna los clientes del VaR """
 
-@ app.route('/var/clientes/', methods=['GET'])
+@ app.route('/var/buscarClientes/', methods=['GET'])
 def getClientesVar():
     #Encontramos los ids de los clientes que tienen como riesgo el var y los busca en Clientes
     Clientes_var = Clientes.query.filter(Clientes.id == Riesgos.cliente_id, Riesgos.nombre == "VAR").all()
@@ -193,7 +193,7 @@ def getClientesVar():
 
 """ Retorna un cliente especifico que tenga el valor en riesgo (cifras negativas)"""
 
-@ app.route('/var/clienteID/<id_buscar>', methods=['GET'])
+@ app.route('/var/buscarClientesPorId/<id_buscar>', methods=['GET'])
 def getClientesVarID(id_buscar):
     #Encontramos el id que cumpla con las condiciones
     datos_cliente = Clientes.query.filter(Clientes.id == id_buscar,Riesgos.cliente_id== id_buscar, Riesgos.nombre=="VAR", Riesgos.valor <= 0).first()
@@ -208,7 +208,7 @@ def getClientesVarID(id_buscar):
 """ POST """
 """ Crea un nuevo cliente para el VaR """
 
-@ app.route('/var/crearCliente', methods=['POST'])
+@ app.route('/var/crearClientes', methods=['POST'])
 def crearClienteVar():
     # Datos cliente
     id_cliente = request.json['id']
@@ -248,7 +248,7 @@ def crearClienteVar():
 """ Borra un cliente especifico para el VaR """
 
 
-@ app.route('/var/eliminarCliente/<string:id_cliente>', methods=['DELETE'])
+@ app.route('/var/eliminarClientesPorId/<string:id_cliente>', methods=['DELETE'])
 def eliminarClienteVar(id_cliente):
     #Obtenemos cliente por id y que sea var
     cliente = Riesgos.query.filter(Riesgos.cliente_id == id_cliente, Riesgos.nombre == "VAR").first()

@@ -43,7 +43,7 @@ class Riesgos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(80), unique=True, nullable=False)
     fecha = db.Column(db.Date, unique=True, nullable=False)
-    valor = db.Column(db.dDouble(80), unique=True, nullable=False)
+    valor = db.Column(db.Double(80), unique=True, nullable=False)
     cliente_id = db.Column(db.Integer, db.ForeignKey('Clientes.id'),
                            nullable=False)
 

@@ -89,7 +89,7 @@ def obtenerTodos():
 """ Retorna los clientes del Riesgo de Mercado """
 
 
-@ app.route('riesgoMercado/clientes/<string:nombre>', methods=['GET'])
+@ app.route('/riesgoMercado/clientes/<string:nombre>', methods=['GET'])
 def obtenerClientes():
     clientes = Riesgos.query.all()
     return jsonify({"message": "Clientes de Riesgo de Mercado", "Clientes": str(clientes)})
@@ -99,7 +99,7 @@ def obtenerClientes():
 """ Crea un nuevo cliente para el riesgo de mercado """
 
 
-@ app.route('riesgoMercado/clientes', methods=['POST'])
+@ app.route('/riesgoMercado/clientes', methods=['POST'])
 def crearClienteRM():
     id = request.json['id']
     nombre = request.json['nombre']
@@ -125,7 +125,7 @@ def crearClienteRM():
 """ Elimina un cliente del Riesgo de Mercado """
 
 
-@ app.route('riesgoMercado/clientes/<string:nombre>', methods=['DELETE'])
+@ app.route('/riesgoMercado/clientes/<string:nombre>', methods=['DELETE'])
 def eliminarCliente(id):
     db.session.delete(id)
     db.session.commit()
@@ -136,7 +136,7 @@ def eliminarCliente(id):
 """ Retorna un cliente especifico del Riesgo de Mercado """
 
 
-@ app.route('riesgoMercado/clientes/<string:nombre>', methods=['GET'])
+@ app.route('/riesgoMercado/clientes/<string:nombre>', methods=['GET'])
 def obtenerClienteEspecifico():
     cliente = Riesgos.query.filter_by(Riesgos.cliente_id).first()
     return jsonify({"message": "Cliente de Riesgo de Mercado", "Cliente": str(cliente)})
@@ -146,7 +146,7 @@ def obtenerClienteEspecifico():
 """ Actualiza un cliente especifico del Riesgo de Mercado """
 
 
-@ app.route('riesgoMercado/clientes/<string:nombre>', methods=['PUT'])
+@ app.route('/riesgoMercado/clientes/<string:nombre>', methods=['PUT'])
 def actualizarCliente(id):
     clienteA = update(Clientes).where(Clientes.id == id).values()
     return jsonify({"message": "Cliente actualizado", "Cliente": str(clienteA)})
@@ -156,7 +156,7 @@ def actualizarCliente(id):
 """ Elimina un cliente especifico del Riesgo de Mercado """
 
 
-@ app.route('riesgoMercado/clientes/<string:nombre>', methods=['DELETE'])
+@ app.route('/riesgoMercado/clientes/<string:nombre>', methods=['DELETE'])
 def eliminarClienteEspecifico():
     cliente = Riesgos.query.filter_by(Riesgos.cliente_id).first()
     db.session.delete(cliente)

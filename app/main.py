@@ -181,3 +181,53 @@ def crearClienteVar():
 """ Borra un cliente para un VaR """
 
 """ Borra un cliente especifico para el VaR """
+
+""" RUTAS DANIEL LOPEZ RODRIGUEZ """
+
+""" GET """
+"""" Retorna todos los riesgos """
+@app.route('/riesgos', methods=['GET'])
+def obtenerTodosRiesgos():
+    riesgos = Riesgos.query.all()
+    return jsonify({"message":"Resultados Extraidos con exito","Riesgos":str(riesgos)          
+    })
+
+""" POST """
+"""" Crea un registro con el valor del VaR """
+@app.route('/riesgo', methods=['POST'])
+def insertarRiesgo():
+    nombre = request.json['nombre']
+    fecha = request.json['fecha']
+    valor = request.json['valor']
+    cliente_id = request.json['cliente_id']   
+    me = Riesgos(nombre=nombre, fecha=fecha, valor=valor, cliente_id=cliente_id)
+    db.session.add(me)
+    db.session.commit()
+    if(me.id):
+        return jsonify({'message': 'Registrado'})
+    else:
+        return jsonify({'message': 'Error'})    
+
+""" PUT """
+"""" Actualiza el valor del VaR """ 
+
+
+""" GET """
+"""" Retorna el VaR en un periodo de tiempo t """ 
+@app.route('/riesgo/<string:fecha>', methods=['GET'])
+def consultarRiesgoPorFecha(fecha):
+    riesgo = Riesgos.query.filter_by(fecha=fecha).first_or_404()
+    return jsonify({"message":"Resultados Extraidos con exito","Riesgo":str(riesgo)})
+
+
+""" PUT """
+"""" Actualizar el valor del VaR a un periodo de tiempo t """     
+
+""" DELETE """
+"""" Borra el valor del VaR en un periodo de tiempo t """ 
+@app.route('/riesgo/<string:fecha>', methods=['DELETE'])
+def eliminarRiesgoPorFecha(fecha):
+    riesgo = Riesgos.query.filter_by(fecha=fecha).first_or_404()
+    db.session.delete(riesgo)
+    db.session.commit()
+    return jsonify({'message': 'Elimado'}) 

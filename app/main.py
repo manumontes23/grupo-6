@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import update
 
 app = Flask(__name__)
 """ entre los // y los : es el usuario """
@@ -77,6 +78,70 @@ def obtenerTodos():
     usuarios = User.query.all()
     return jsonify({"message":"Resultados Extraidos con exito","Usuarios":str(usuarios)
     })
+
+""" Rutas Jessica Parra """
+
+""" Get """
+""" Retorna los clientes del Riesgo de Mercado """
+@app.route('riesgoMercado/clientes/<string:nombre>', methods=['GET'])
+def obtenerClientes():
+    clientes = Riesgos.query.all()
+    return jsonify({"message": "Clientes de Riesgo de Mercado", "Clientes":str(clientes)})
+
+""" Post """
+""" Crea un nuevo cliente para el riesgo de mercado """
+@app.route('riesgoMercado/clientes', methods=['POST'])
+def crearClienteRM():
+    id = request.json['id']
+    nombre = request.json['nombre']
+    apellidos = request.json['apellidos']
+    telefono = request.json['telefono']
+    celular = request.json['celular']
+    email = request.json['email']
+    me = Clientes(id = id, nombre = nombre, apellidos = apellidos,
+              telefono = telefono, celular = celular, email = email)
+    db.session.add(me)
+    db.session.commit()
+    if(me.id):
+        return jsonify({'message': 'Cliente registrado'})
+    else:
+        return jsonify({'message': 'Error en el registro'})
+
+""" Put """
+""" Actualiza un cliente del Riesgo de Mercado """
+"@app.route('riesgoMercado/clientes/<string:nombre>', methods=['PUT'])"
+
+""" Delete """
+""" Elimina un cliente del Riesgo de Mercado """
+@app.route('riesgoMercado/clientes/<string:nombre>', methods=['DELETE'])
+def eliminarCliente(id):
+    db.session.delete(id)
+    db.session.commit()
+    return jsonify({'message': 'Eliminado el cliente'})
+
+""" Get """
+""" Retorna un cliente especifico del Riesgo de Mercado """
+@app.route('riesgoMercado/clientes/<string:nombre>', methods=['GET'])
+def obtenerClienteEspecifico():
+    cliente = Riesgos.query.filter_by(Riesgos.cliente_id).first()
+    return jsonify({"message": "Cliente de Riesgo de Mercado", "Cliente":str(cliente)})
+
+""" Put """
+""" Actualiza un cliente especifico del Riesgo de Mercado """
+@app.route('riesgoMercado/clientes/<string:nombre>', methods=['PUT'])
+def actualizarCliente(id):
+    clienteA = update(Clientes).where(Clientes.id==id).\
+        values()
+    return jsonify({"message": "Cliente actualizado", "Cliente":str(clienteA)})
+
+""" Delete """
+""" Elimina un cliente especifico del Riesgo de Mercado """
+@app.route('riesgoMercado/clientes/<string:nombre>', methods=['DELETE'])
+def eliminarClienteEspecifico():
+    cliente = Riesgos.query.filter_by(Riesgos.cliente_id).first()
+    db.session.delete(cliente)
+    db.session.commit()
+    return jsonify({'message': 'Cliente eliminado'})
 
 
 """ RUTAS SANTIAGO JIMENEZ RAIGOSA """

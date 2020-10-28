@@ -89,9 +89,9 @@ def obtenerTodos():
 """ Retorna los clientes del Riesgo de Mercado """
 
 
-@ app.route('/riesgoMercado/clientes/<string:nombre>', methods=['GET'])
+@ app.route('/riesgoMercado/clientes', methods=['GET'])
 def obtenerClientes():
-    clientes = Riesgos.query.all()
+    clientes = Riesgos.query.filter_by(Riesgos.nombre == 'Riesgo de Mercado')
     return jsonify({"message": "Clientes de Riesgo de Mercado", "Clientes": str(clientes)})
 
 
@@ -143,7 +143,7 @@ def eliminarCliente(id):
 """ Retorna un cliente especifico del Riesgo de Mercado """
 
 
-@ app.route('/riesgoMercado/clientes/<string:nombre>', methods=['GET'])
+@ app.route('/riesgoMercado/clientes', methods=['GET'])
 def obtenerClienteEspecifico(id_Cliente):
     cliente = Riesgos.query.filter_by(Riesgos.cliente_id == id_Cliente, Riesgos.nombre == 'Riesgo de Mercado').first()
     return jsonify({"message": "Cliente de Riesgo de Mercado", "Cliente": str(cliente)})
@@ -163,7 +163,7 @@ def actualizarCliente(id_Cliente):
 """ Elimina un cliente especifico del Riesgo de Mercado """
 
 
-@ app.route('/riesgoMercado/clientes/<string:nombre>', methods=['DELETE'])
+@ app.route('/riesgoMercado/clientes', methods=['DELETE'])
 def eliminarClienteEspecifico(id_Cliente):
     cliente = Riesgos.query.filter_by(Riesgos.cliente_id == id_Cliente, Riesgos.nombre == 'Riesgo de Mercado').first()
     db.session.delete(cliente)

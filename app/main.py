@@ -37,21 +37,16 @@ class Clientes(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
 
     def __repr__(self):
-        return 'id: ' + str(self.id) + 'nombre: ' + str(self.nombre) + ' apellidos: ' + str(self.apellidos) + ' telefono: ' + str(self.telefono) +' celular: ' + str(self.celular)+' email: ' + str(self.email)
+        return 'id: ' + str(self.id) + 'nombre: ' + str(self.nombre) + ' apellidos: ' + str(self.apellidos) + ' telefono: ' + str(self.telefono) + ' celular: ' + str(self.celular)+' email: ' + str(self.email)
 
 
 class Riesgos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(45), unique=True, nullable=False)
     fecha = db.Column(db.Date, unique=True, nullable=False)
-<<<<<<< HEAD
-    valor = db.Column(db.dDouble(45), unique=True, nullable=False)
-    cliente_id = db.Column(db.Integer, db.ForeignKey('Clientes.id'),
-=======
     valor = db.Column(db.Float(80), unique=True, nullable=False)
-    cliente_id = db.Column(db.Integer, db.ForeignKey('clientes.id'),
->>>>>>> b425bec2d13687c07aa891a40790182a0246ebed
-                           nullable=False)
+    cliente_id = db.Column(db.Integer, db.ForeignKey(
+        'clientes.id'), nullable=False)
 
     def __repr__(self):
         return ' nombre: ' + str(self.nombre) + ' fecha: ' + str(self.fecha) + ' valor: ' + str(self.valor) + ' cliente_id: ' + str(self.cliente_id)
@@ -59,11 +54,11 @@ class Riesgos(db.Model):
     """ Ejemplos """
 
 
-@app.route('/ejemplo', methods=['POST'])
+@ app.route('/ejemplo', methods = ['POST'])
 def insertar():
-    username = request.json['username']
-    email = request.json['email']
-    me = User(username=username, email=email)
+    username=request.json['username']
+    email=request.json['email']
+    me=User(username = username, email = email)
     db.session.add(me)
     db.session.commit()
     if(me.id):
@@ -72,16 +67,16 @@ def insertar():
         return jsonify({'message': 'Error'})
 
 
-@app.route('/ejemplo/<string:id>', methods=['DELETE'])
+@ app.route('/ejemplo/<string:id>', methods = ['DELETE'])
 def eliminar(id):
     db.session.delete(id)
     db.session.commit()
     return jsonify({'message': 'Elimado'})
 
 
-@app.route('/ejemplo', methods=['GET'])
+@ app.route('/ejemplo', methods = ['GET'])
 def obtenerTodos():
-    usuarios = User.query.all()
+    usuarios=User.query.all()
     return jsonify({"message": "Resultados Extraidos con exito", "Usuarios": str(usuarios)
                     })
 
@@ -89,23 +84,23 @@ def obtenerTodos():
 
 """ Get """
 """ Retorna los clientes del Riesgo de Mercado """
-@app.route('riesgoMercado/clientes/<string:nombre>', methods=['GET'])
+@ app.route('riesgoMercado/clientes/<string:nombre>', methods = ['GET'])
 def obtenerClientes():
-    clientes = Riesgos.query.all()
-    return jsonify({"message": "Clientes de Riesgo de Mercado", "Clientes":str(clientes)})
+    clientes=Riesgos.query.all()
+    return jsonify({"message": "Clientes de Riesgo de Mercado", "Clientes": str(clientes)})
 
 """ Post """
 """ Crea un nuevo cliente para el riesgo de mercado """
-@app.route('riesgoMercado/clientes', methods=['POST'])
+@ app.route('riesgoMercado/clientes', methods = ['POST'])
 def crearClienteRM():
-    id = request.json['id']
-    nombre = request.json['nombre']
-    apellidos = request.json['apellidos']
-    telefono = request.json['telefono']
-    celular = request.json['celular']
-    email = request.json['email']
-    me = Clientes(id = id, nombre = nombre, apellidos = apellidos,
-              telefono = telefono, celular = celular, email = email)
+    id=request.json['id']
+    nombre=request.json['nombre']
+    apellidos=request.json['apellidos']
+    telefono=request.json['telefono']
+    celular=request.json['celular']
+    email=request.json['email']
+    me=Clientes(id = id, nombre = nombre, apellidos = apellidos,
+              telefono=telefono, celular=celular, email=email)
     db.session.add(me)
     db.session.commit()
     if(me.id):
@@ -119,7 +114,7 @@ def crearClienteRM():
 
 """ Delete """
 """ Elimina un cliente del Riesgo de Mercado """
-@app.route('riesgoMercado/clientes/<string:nombre>', methods=['DELETE'])
+@ app.route('riesgoMercado/clientes/<string:nombre>', methods=['DELETE'])
 def eliminarCliente(id):
     db.session.delete(id)
     db.session.commit()
@@ -127,24 +122,23 @@ def eliminarCliente(id):
 
 """ Get """
 """ Retorna un cliente especifico del Riesgo de Mercado """
-@app.route('riesgoMercado/clientes/<string:nombre>', methods=['GET'])
+@ app.route('riesgoMercado/clientes/<string:nombre>', methods=['GET'])
 def obtenerClienteEspecifico():
-    cliente = Riesgos.query.filter_by(Riesgos.cliente_id).first()
-    return jsonify({"message": "Cliente de Riesgo de Mercado", "Cliente":str(cliente)})
+    cliente=Riesgos.query.filter_by(Riesgos.cliente_id).first()
+    return jsonify({"message": "Cliente de Riesgo de Mercado", "Cliente": str(cliente)})
 
 """ Put """
 """ Actualiza un cliente especifico del Riesgo de Mercado """
-@app.route('riesgoMercado/clientes/<string:nombre>', methods=['PUT'])
+@ app.route('riesgoMercado/clientes/<string:nombre>', methods=['PUT'])
 def actualizarCliente(id):
-    clienteA = update(Clientes).where(Clientes.id==id).\
-        values()
-    return jsonify({"message": "Cliente actualizado", "Cliente":str(clienteA)})
+    clienteA=update(Clientes).where(Clientes.id == id).values()
+    return jsonify({"message": "Cliente actualizado", "Cliente": str(clienteA)})
 
 """ Delete """
 """ Elimina un cliente especifico del Riesgo de Mercado """
-@app.route('riesgoMercado/clientes/<string:nombre>', methods=['DELETE'])
+@ app.route('riesgoMercado/clientes/<string:nombre>', methods=['DELETE'])
 def eliminarClienteEspecifico():
-    cliente = Riesgos.query.filter_by(Riesgos.cliente_id).first()
+    cliente=Riesgos.query.filter_by(Riesgos.cliente_id).first()
     db.session.delete(cliente)
     db.session.commit()
     return jsonify({'message': 'Cliente eliminado'})
@@ -155,16 +149,11 @@ def eliminarClienteEspecifico():
 """ GET """
 """ Retorna los clientes del VaR """
 
-
-@app.route('/var/clienteID/<id>', methods=['GET'])
-def crearClienteVar(id):
-    cliente = Clientes.query.filter_by(id=id).first()
-    db.session.(me)
-    db.session.commit()
-    if(me.id):
-        return jsonify({'message': 'Registrado'})
-    else:
-        return jsonify({'message': 'Error'})
+@ app.route('/var/clienteID/', methods=['GET'])
+def getClientesVar():
+    riesgos=Riesgos.query.all()
+    return jsonify({"message": "Resultados Extraidos con exito", "Riesgos": str(riesgos)
+    })
 
 
 """ Retorna un cliente especifico que tenga el valor en riesgo (cifras negativas)"""
@@ -173,17 +162,17 @@ def crearClienteVar(id):
 """ Crea un nuevo cliente para el VaR """
 
 
-@app.route('/var/crearCliente', methods=['POST'])
+@ app.route('/var/crearCliente', methods=['POST'])
 def crearClienteVar():
-    nombre = request.json['nombre']
-    fecha = request.json['fecha']
-    valor = request.json['valor']
-    cliente_id = request.json['cliente_id']
-    cliente = User(id=id, nombre=nombre, fecha=fecha,
+    nombre="VAR"
+    fecha=request.json['fecha']
+    valor=request.json['valor']
+    cliente_id=request.json['cliente_id']
+    cliente=User(id=id, nombre=nombre, fecha=fecha,
                    valor=valor, cliente_id=cliente_id)
-    db.session.add(Riesgos)
+    db.session.add(cliente)
     db.session.commit()
-    if(me.id):
+    if(cliente.id):
         return jsonify({'message': 'Registrado'})
     else:
         return jsonify({'message': 'Error'})
@@ -195,56 +184,64 @@ def crearClienteVar():
 """ Actualiza un cliente especifico para el VaR """
 
 """ DELETE """
-""" Borra un cliente para un VaR """
 
 """ Borra un cliente especifico para el VaR """
+@ app.route('/var/eliminar<string:id>', methods=['DELETE'])
+def eliminarRiesgoPorFecha(id):
+    cliente = Riesgos.query.filter_by(id = id &)
+    db.session.delete(cliente)
+    db.session.commit()
+    return jsonify({'message': 'Elimado'})
 
+
+"""  """
 """ RUTAS DANIEL LOPEZ RODRIGUEZ """
+"""  """
 
 """ GET """
 """" Retorna todos los riesgos """
-@app.route('/var', methods=['GET'])
+@ app.route('/var', methods=['GET'])
 def obtenerTodosRiesgos():
-    riesgos = Riesgos.query.all()
-    return jsonify({"message":"Resultados Extraidos con exito","Riesgos":str(riesgos)          
+    riesgos=Riesgos.query.all()
+    return jsonify({"message": "Resultados Extraidos con exito", "Riesgos": str(riesgos)
     })
 
 """ POST """
 """" Crea un registro con el valor del VaR """
-@app.route('/var', methods=['POST'])
+@ app.route('/var', methods=['POST'])
 def insertarRiesgo():
-    nombre = request.json['nombre']
-    fecha = request.json['fecha']
-    valor = request.json['valor']
-    cliente_id = request.json['cliente_id']   
-    me = Riesgos(nombre=nombre, fecha=fecha, valor=valor, cliente_id=cliente_id)
+    nombre=request.json['nombre']
+    fecha=request.json['fecha']
+    valor=request.json['valor']
+    cliente_id=request.json['cliente_id']
+    me=Riesgos(nombre=nombre, fecha=fecha, valor=valor, cliente_id=cliente_id)
     db.session.add(me)
     db.session.commit()
     if(me.id):
         return jsonify({'message': 'Registrado'})
     else:
-        return jsonify({'message': 'Error'})    
+        return jsonify({'message': 'Error'})
 
 """ PUT """
-"""" Actualiza el valor del VaR """ 
+"""" Actualiza el valor del VaR """
 
 
 """ GET """
-"""" Retorna el VaR en un periodo de tiempo t """ 
-@app.route('/var/<string:fecha>', methods=['GET'])
+"""" Retorna el VaR en un periodo de tiempo t """
+@ app.route('/var/<string:fecha>', methods=['GET'])
 def consultarRiesgoPorFecha(fecha):
-    riesgo = Riesgos.query.filter_by(fecha=fecha).first_or_404()
-    return jsonify({"message":"Resultados Extraidos con exito","Riesgo":str(riesgo)})
+    riesgo=Riesgos.query.filter_by(fecha=fecha).first_or_404()
+    return jsonify({"message": "Resultados Extraidos con exito", "Riesgo": str(riesgo)})
 
 
 """ PUT """
-"""" Actualizar el valor del VaR a un periodo de tiempo t """     
+"""" Actualizar el valor del VaR a un periodo de tiempo t """
 
 """ DELETE """
-"""" Borra el valor del VaR en un periodo de tiempo t """ 
-@app.route('/var/<string:fecha>', methods=['DELETE'])
+"""" Borra el valor del VaR en un periodo de tiempo t """
+@ app.route('/var/<string:fecha>', methods=['DELETE'])
 def eliminarRiesgoPorFecha(fecha):
-    riesgo = Riesgos.query.filter_by(fecha=fecha).first_or_404()
+    riesgo=Riesgos.query.filter_by(fecha=fecha).first_or_404()
     db.session.delete(riesgo)
     db.session.commit()
-    return jsonify({'message': 'Elimado'}) 
+    return jsonify({'message': 'Elimado'})

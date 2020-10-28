@@ -101,17 +101,24 @@ def obtenerClientes():
 
 @ app.route('/riesgoMercado/clientes', methods=['POST'])
 def crearClienteRM():
-    id = request.json['id']
+    id_cliente = request.json['id']
     nombre = request.json['nombre']
     apellidos = request.json['apellidos']
     telefono = request.json['telefono']
     celular = request.json['celular']
     email = request.json['email']
-    me = Clientes(id=id, nombre=nombre, apellidos=apellidos,
-                  telefono=telefono, celular=celular, email=email)
-    db.session.add(me)
+
+    nombre = "Riesgo de Mercado"
+    fecha = datetime.now()
+    valor = request.json['valor']
+    cliente = Clientes(id=id_cliente, nombre=nombre, apellidos=apellidos, telefono=telefono, celular=celular, 
+                email=email)
+    
+    riesgo = Riesgos(nombre=nombre, fecha=fecha, valor=valor, cliente_id=id_cliente)
+    db.session.add(cliente)
+    db.session.add(riesgo)
     db.session.commit()
-    if(me.id):
+    if(cliente.id):
         return jsonify({'message': 'Cliente registrado'})
     else:
         return jsonify({'message': 'Error en el registro'})
@@ -137,8 +144,8 @@ def eliminarCliente(id):
 
 
 @ app.route('/riesgoMercado/clientes/<string:nombre>', methods=['GET'])
-def obtenerClienteEspecifico():
-    cliente = Riesgos.query.filter_by(Riesgos.cliente_id).first()
+def obtenerClienteEspecifico(id_Cliente):
+    cliente = Riesgos.query.filter_by(Riesgos.cliente_id == id_Cliente, Riesgos.nombre == 'Riesgo de Mercado').first()
     return jsonify({"message": "Cliente de Riesgo de Mercado", "Cliente": str(cliente)})
 
 
@@ -147,8 +154,8 @@ def obtenerClienteEspecifico():
 
 
 @ app.route('/riesgoMercado/clientes/<string:nombre>', methods=['PUT'])
-def actualizarCliente(id):
-    clienteA = update(Clientes).where(Clientes.id == id).values()
+def actualizarCliente(id_Cliente):
+    clienteA = update(Clientes).where(Clientes.id == id_Cliente).values()
     return jsonify({"message": "Cliente actualizado", "Cliente": str(clienteA)})
 
 
@@ -157,8 +164,8 @@ def actualizarCliente(id):
 
 
 @ app.route('/riesgoMercado/clientes/<string:nombre>', methods=['DELETE'])
-def eliminarClienteEspecifico():
-    cliente = Riesgos.query.filter_by(Riesgos.cliente_id).first()
+def eliminarClienteEspecifico(id_Cliente):
+    cliente = Riesgos.query.filter_by(Riesgos.cliente_id == id_Cliente, Riesgos.nombre == 'Riesgo de Mercado').first()
     db.session.delete(cliente)
     db.session.commit()
     return jsonify({'message': 'Cliente eliminado'})

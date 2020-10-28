@@ -186,7 +186,7 @@ def crearClienteVar():
 
 """ GET """
 """" Retorna todos los riesgos """
-@app.route('/riesgos', methods=['GET'])
+@app.route('/var', methods=['GET'])
 def obtenerTodosRiesgos():
     riesgos = Riesgos.query.all()
     return jsonify({"message":"Resultados Extraidos con exito","Riesgos":str(riesgos)          
@@ -194,7 +194,7 @@ def obtenerTodosRiesgos():
 
 """ POST """
 """" Crea un registro con el valor del VaR """
-@app.route('/riesgo', methods=['POST'])
+@app.route('/var', methods=['POST'])
 def insertarRiesgo():
     nombre = request.json['nombre']
     fecha = request.json['fecha']
@@ -214,7 +214,7 @@ def insertarRiesgo():
 
 """ GET """
 """" Retorna el VaR en un periodo de tiempo t """ 
-@app.route('/riesgo/<string:fecha>', methods=['GET'])
+@app.route('/var/<string:fecha>', methods=['GET'])
 def consultarRiesgoPorFecha(fecha):
     riesgo = Riesgos.query.filter_by(fecha=fecha).first_or_404()
     return jsonify({"message":"Resultados Extraidos con exito","Riesgo":str(riesgo)})
@@ -225,7 +225,7 @@ def consultarRiesgoPorFecha(fecha):
 
 """ DELETE """
 """" Borra el valor del VaR en un periodo de tiempo t """ 
-@app.route('/riesgo/<string:fecha>', methods=['DELETE'])
+@app.route('/var/<string:fecha>', methods=['DELETE'])
 def eliminarRiesgoPorFecha(fecha):
     riesgo = Riesgos.query.filter_by(fecha=fecha).first_or_404()
     db.session.delete(riesgo)

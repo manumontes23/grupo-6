@@ -26,12 +26,13 @@ class User(db.Model):
     def __repr__(self):
         return "usuario: " + str(self.username) + " Correo: " + str(self.email)
 
+
 class Clientes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(80), unique=True, nullable=False)
-    apellidos = db.Column(db.String(80), unique=True, nullable=False)
-    telefono = db.Column(db.String(80), unique=True, nullable=False)
-    celular = db.Column(db.String(80), unique=True, nullable=False)
+    nombre = db.Column(db.String(45), unique=True, nullable=False)
+    apellidos = db.Column(db.String(45), unique=True, nullable=False)
+    telefono = db.Column(db.String(45), unique=True, nullable=False)
+    celular = db.Column(db.String(45), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
     def __repr__(self):
@@ -40,9 +41,9 @@ class Clientes(db.Model):
 
 class Riesgos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(80), unique=True, nullable=False)
+    nombre = db.Column(db.String(45), unique=True, nullable=False)
     fecha = db.Column(db.Date, unique=True, nullable=False)
-    valor = db.Column(db.dDouble(80), unique=True, nullable=False)
+    valor = db.Column(db.dDouble(45), unique=True, nullable=False)
     cliente_id = db.Column(db.Integer, db.ForeignKey('Clientes.id'),
                            nullable=False)
 
@@ -75,14 +76,26 @@ def eliminar(id):
 @app.route('/ejemplo', methods=['GET'])
 def obtenerTodos():
     usuarios = User.query.all()
-    return jsonify({"message":"Resultados Extraidos con exito","Usuarios":str(usuarios)
-    })
+    return jsonify({"message": "Resultados Extraidos con exito", "Usuarios": str(usuarios)
+                    })
 
 
 """ RUTAS SANTIAGO JIMENEZ RAIGOSA """
 
 """ GET """
 """ Retorna los clientes del VaR """
+
+
+@app.route('/var/clienteID/<id>', methods=['GET'])
+def crearClienteVar(id):
+    cliente = Clientes.query.filter_by(id=id).first()
+    db.session.(me)
+    db.session.commit()
+    if(me.id):
+        return jsonify({'message': 'Registrado'})
+    else:
+        return jsonify({'message': 'Error'})
+
 
 """ Retorna un cliente especifico que tenga el valor en riesgo (cifras negativas)"""
 
@@ -93,13 +106,12 @@ def obtenerTodos():
 @app.route('/var/crearCliente', methods=['POST'])
 def crearClienteVar():
     nombre = request.json['nombre']
-    apellidos = request.json['apellidos']
-    telefono = request.json['telefono']
-    celular = request.json['celular']
-    email = request.json['email']
-    me = User(nombre = nombre, apellidos = apellidos,
-              telefono = telefono, celular = celular, email = email)
-    db.session.add(me)
+    fecha = request.json['fecha']
+    valor = request.json['valor']
+    cliente_id = request.json['cliente_id']
+    cliente = User(id=id, nombre=nombre, fecha=fecha,
+                   valor=valor, cliente_id=cliente_id)
+    db.session.add(Riesgos)
     db.session.commit()
     if(me.id):
         return jsonify({'message': 'Registrado'})

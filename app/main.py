@@ -36,19 +36,19 @@ class Clientes(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
 
     def __repr__(self):
-        return 'nombre: ' + str(nombre) + ' apellidos: ' + str(apellidos) + ' telefono: ' + str(telefono) + ' telefono: ' + str(celular)+' celular: ' + str(nombre)+' email: ' + str(email)
+        return 'id: ' + str(self.id) + 'nombre: ' + str(self.nombre) + ' apellidos: ' + str(self.apellidos) + ' telefono: ' + str(self.telefono) +' celular: ' + str(self.celular)+' email: ' + str(self.email)
 
 
 class Riesgos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(80), unique=True, nullable=False)
     fecha = db.Column(db.Date, unique=True, nullable=False)
-    valor = db.Column(db.Double(80), unique=True, nullable=False)
-    cliente_id = db.Column(db.Integer, db.ForeignKey('Clientes.id'),
+    valor = db.Column(db.Float(80), unique=True, nullable=False)
+    cliente_id = db.Column(db.Integer, db.ForeignKey('clientes.id'),
                            nullable=False)
 
     def __repr__(self):
-        return ' nombre: ' + str(nombre) + ' fecha: ' + str(fecha) + ' valor: ' + str(valor) + ' cliente_id: ' + str(cliente_id)
+        return ' nombre: ' + str(self.nombre) + ' fecha: ' + str(self.fecha) + ' valor: ' + str(self.valor) + ' cliente_id: ' + str(self.cliente_id)
 
     """ Ejemplos """
 
